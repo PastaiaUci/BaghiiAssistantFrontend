@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import './SideBar.css';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import "./SideBar.css";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(true);
@@ -10,10 +10,10 @@ const Sidebar = () => {
     // Fetch users from the backend
     const fetchUsers = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/users');
+        const response = await axios.get("http://localhost:5000/users");
         setUsers(response.data);
       } catch (error) {
-        console.error('Error fetching users:', error);
+        console.error("Error fetching users:", error);
       }
     };
 
@@ -25,16 +25,16 @@ const Sidebar = () => {
   };
 
   return (
-    <div className={`sidebar ${isOpen ? 'open' : 'closed'}`}>
+    <div className={`sidebar ${isOpen ? "open" : "closed"}`}>
       <button className="toggle-button" onClick={toggleSidebar}>
-        {isOpen ? '<<' : '>>'}
+        {isOpen ? "<<" : ">>"}
       </button>
       {isOpen && (
         <div className="user-list">
           <h3>Users</h3>
           <ul>
-            {users.map(user => (
-              <li key={user._id}>{user.username}</li>
+            {users.map((user) => (
+              <li key={user._id["$oid"]}>{user.username}</li>
             ))}
           </ul>
         </div>

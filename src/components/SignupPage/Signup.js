@@ -1,27 +1,43 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
-import './Signup.css';
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import axios from "axios";
+import "./Signup.css";
 
 const Signup = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/signup', {
+      const response = await axios.post("http://localhost:5000/users", {
         username,
         password,
       });
 
-      if (response.status === 200) {
-        navigate('/');
+      if (response.status === 201) {
+        // Automatically log in the user after signup
+        await axios.post(
+          "http://localhost:5000/login",
+          {
+            username,
+            password,
+          },
+          {
+            withCredentials: true,
+          }
+        );
+
+        navigate("/home");
       }
     } catch (error) {
-      setError('Signup failed');
+      if (error.response && error.response.status === 400) {
+        setError("Username already exists");
+      } else {
+        setError("Signup failed");
+      }
     }
   };
 
@@ -46,7 +62,7 @@ const Signup = () => {
         />
         <button type="submit">Sign Up</button>
         <p>
-          Already have an account? <Link to="/login">Log in</Link>
+          Already have an account? <Link to="/login">Login</Link>
         </p>
       </form>
     </div>
