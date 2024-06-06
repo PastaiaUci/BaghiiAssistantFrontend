@@ -5,6 +5,7 @@ import "./SideBar.css";
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(true);
   const [users, setUsers] = useState([]);
+  const [hoveredUser, setHoveredUser] = useState(null);
 
   useEffect(() => {
     // Fetch users from the backend
@@ -24,6 +25,14 @@ const Sidebar = () => {
     setIsOpen(!isOpen);
   };
 
+  const handleMouseEnter = (user) => {
+    setHoveredUser(user);
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredUser(null);
+  };
+
   return (
     <div className={`sidebar ${isOpen ? "open" : "closed"}`}>
       <button className="toggle-button" onClick={toggleSidebar}>
@@ -34,7 +43,21 @@ const Sidebar = () => {
           <h3>Users</h3>
           <ul>
             {users.map((user) => (
-              <li key={user._id["$oid"]}>{user.username}</li>
+              <li
+                key={user._id["$oid"]}
+                onMouseEnter={() => handleMouseEnter(user)}
+                onMouseLeave={handleMouseLeave}
+              >
+                {user.username}
+                {hoveredUser && hoveredUser.username === user.username && (
+                  <div className="hover-image">
+                    <img
+                      src={`data:image/jpeg;base64,${hoveredUser.image}`}
+                      alt={hoveredUser.username}
+                    />
+                  </div>
+                )}
+              </li>
             ))}
           </ul>
         </div>

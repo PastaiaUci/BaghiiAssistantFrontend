@@ -5,6 +5,7 @@ import Sidebar from "../SideBarPage/SideBar";
 import Webcam from "react-webcam";
 import { io } from "socket.io-client";
 import "./Home.css";
+import BaghiiLogo from "../../images/BaghiiLogo.jpg";
 
 const Home = () => {
   const [username, setUsername] = useState("");
@@ -53,7 +54,7 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    if (showWebcam && mode) {
+    if (showWebcam && (mode === "handGesture" || mode === "faceRecognition")) {
       const newSocket = io("http://localhost:5000");
       setSocket(newSocket);
 
@@ -66,13 +67,17 @@ const Home = () => {
             const ctx = canvas.getContext("2d");
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            // Draw the username above the image
+            ctx.fillStyle = "white";
+            ctx.font = "20px Arial";
+            ctx.fillText(username, 10, 30);
           }
         };
       });
 
       return () => newSocket.close();
     }
-  }, [showWebcam, mode]);
+  }, [showWebcam, mode, username]);
 
   const handleLogout = async () => {
     try {
@@ -123,7 +128,7 @@ const Home = () => {
         socket.emit("frame", {
           image: imageSrc.split(",")[1],
           mode,
-          name: username,
+          username,
         });
       } else {
         console.error("Webcam capture failed.");
@@ -132,13 +137,19 @@ const Home = () => {
   }, [webcamRef, socket, mode, username]);
 
   useEffect(() => {
-    const interval = setInterval(captureFrame, 200);
+    const interval = setInterval(captureFrame, 600);
     return () => clearInterval(interval);
   }, [captureFrame]);
 
   return (
     <div className="home-wrapper">
-      <Sidebar />
+      <Sidebar
+        startVoiceAssistant={startVoiceAssistant}
+        startHandGesture={startHandGesture}
+        startFaceRecognition={startFaceRecognition}
+        handleLogout={handleLogout}
+        isSpeaking={isSpeaking}
+      />
       <div className="home-container">
         <div className="header">
           <button onClick={handleLogout} className="logout-button">
@@ -188,6 +199,7 @@ const Home = () => {
         </div>
         <div className="credits">
           <p>Credits: Baghii Org</p>
+          <img src={BaghiiLogo} alt="Baghii Logo" className="small-logo" />
         </div>
       </div>
 

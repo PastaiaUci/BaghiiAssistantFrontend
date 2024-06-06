@@ -1,9 +1,9 @@
 .login-container {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
 }
 
 form {
@@ -23,16 +23,18 @@ input {
   border-radius: 5px;
 }
 
-button {
+.login-button {
   padding: 10px 20px;
   background-color: #007bff;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  margin-top: 10px;
+  width: 100%;
 }
 
-button:hover {
+.login-button:hover {
   background-color: #0056b3;
 }
 
@@ -51,4 +53,8 @@ a {
 
 a:hover {
   text-decoration: underline;
+}
+
+.webcam-container {
+  margin-top: 20px;
 }

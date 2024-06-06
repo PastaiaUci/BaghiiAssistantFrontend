@@ -125,9 +125,8 @@
 }
 
 .credits {
-  margin-top: auto;
-  font-size: 14px;
-  color: #777;
+  display: flex;
+  align-items: center;
 }
 
 /* Modal styles */
@@ -238,4 +237,10 @@
 
 .close-button:hover {
   background-color: #333333;
+}
+
+.small-logo {
+  width: 30px; /* Adjust the size as needed */
+  height: auto;
+  margin-left: 10px;
 }

@@ -44,4 +44,30 @@
 .user-list li {
   margin: 10px 0;
   font-size: 16px;
+  position: relative;
+}
+
+.hover-image img {
+  width: 100%;
+  height: auto;
+}
+
+.user-list li:hover .hover-image {
+  display: block;
+}
+
+.hover-image img {
+  width: 100%;
+  height: auto;
+}
+
+.hover-image {
+  position: absolute;
+  top: 0;
+  left: 10%;
+  width: 150px;
+  display: none;
+  border: 1px solid #ccc;
+  background: #fff;
+  z-index: 100;
 }
