@@ -6,6 +6,7 @@ import Webcam from "react-webcam";
 import { io } from "socket.io-client";
 import "./Home.css";
 import BaghiiLogo from "../../images/BaghiiLogo.jpg";
+import AssistantChat from "../AssistantChat/AssistantChat";
 
 const Home = () => {
   const [username, setUsername] = useState("");
@@ -13,6 +14,7 @@ const Home = () => {
   const [mode, setMode] = useState(null);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [socket, setSocket] = useState(null);
+  const [messages, setMessages] = useState([]);
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
   const navigate = useNavigate();
@@ -51,6 +53,21 @@ const Home = () => {
 
     const interval = setInterval(checkVoiceAssistantStatus, 1000);
     return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const newSocket = io("http://localhost:5000");
+    setSocket(newSocket);
+
+    newSocket.on("assistant_message", (message) => {
+      setMessages((prev) => [...prev, { text: message.text, type: "info" }]);
+      console.log("MESSAGE IS:", message.text);
+      if (message.text === "Voice assistant stopped.") {
+        setIsSpeaking(false);
+      }
+    });
+
+    return () => newSocket.close();
   }, []);
 
   useEffect(() => {
@@ -94,6 +111,10 @@ const Home = () => {
 
   const startVoiceAssistant = async () => {
     try {
+      setMessages((prev) => [
+        ...prev,
+        { text: "Starting voice assistant...", type: "info" },
+      ]);
       await axios.post(
         "http://localhost:5000/start_voice_assistant",
         {},
@@ -101,8 +122,16 @@ const Home = () => {
       );
       console.log("Voice assistant started");
       setIsSpeaking(true);
+      setMessages((prev) => [
+        ...prev,
+        { text: "Voice assistant started.", type: "info" },
+      ]);
     } catch (error) {
       console.error("Error starting voice assistant:", error);
+      setMessages((prev) => [
+        ...prev,
+        { text: "Error starting voice assistant.", type: "error" },
+      ]);
     }
   };
 
@@ -228,6 +257,8 @@ const Home = () => {
           </div>
         </div>
       )}
+
+      {isSpeaking && <AssistantChat messages={messages} />}
     </div>
   );
 };

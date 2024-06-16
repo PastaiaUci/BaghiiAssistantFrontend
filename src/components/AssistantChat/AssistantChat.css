@@ -1,7 +1,7 @@
 .assistant-chat {
   position: fixed;
   bottom: 20px;
-  left: 20px;
+  right: 20px; /* Change this to right to move to bottom right */
   width: 300px;
   max-height: 400px;
   background-color: #ffffff;

@@ -13,6 +13,9 @@ const Login = () => {
   const [socket, setSocket] = useState(null);
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
+  const usernameRef = useRef(null);
+  const passwordRef = useRef(null);
+  const loginButtonRef = useRef(null);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -42,7 +45,10 @@ const Login = () => {
     newSocket.on("face_login_success", (data) => {
       setUsername(data.username);
       setPassword(data.password);
-      handleLogin();
+      // Use refs to set the value and trigger the login button
+      usernameRef.current.value = data.username;
+      passwordRef.current.value = data.password;
+      loginButtonRef.current.click();
     });
 
     newSocket.on("face_login_failure", () => {
@@ -98,6 +104,7 @@ const Login = () => {
         <input
           type="text"
           placeholder="Username"
+          ref={usernameRef}
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           required
@@ -105,11 +112,12 @@ const Login = () => {
         <input
           type="password"
           placeholder="Password"
+          ref={passwordRef}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <button type="submit" className="login-button">
+        <button type="submit" className="login-button" ref={loginButtonRef}>
           Login
         </button>
         <button
